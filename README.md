@@ -1,2 +1,2 @@
 # VPK Pack
-Create and automatically copy VPK's on linux
+Create and automatically copy VPK's to a PSVita on linux
