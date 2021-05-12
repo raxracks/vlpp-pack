@@ -66,6 +66,16 @@ fi
 sudo rm -rf "/home/PSVMountPoint/$CURRENTDIR.vpk" || echo "File not found, no need to delete."
 sudo cp "$CURRENTFULLDIR/$CURRENTDIR.vpk" /home/PSVMountPoint/
 echo "Files copied successfully."
-sleep 3
-sudo umount /home/PSVMountPoint
+
+while mountpoint -q /home/PSVMountPoint
+do
+    sudo umount -l /home/PSVMountPoint > /dev/null 2>&1
+done
+
+while mountpoint -q $PSVITAMOUNTPOINT
+do
+    sudo umount -l $PSVITAMOUNTPOINT > /dev/null 2>&1
+done
+
+sudo umount $PSVITAMOUNTPOINT
 echo "Successfully unmounted, task done."
