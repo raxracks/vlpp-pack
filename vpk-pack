@@ -15,8 +15,8 @@ else
 fi
 
 echo Deleting old files...
-rm -rf *.vpk
-rm -rf ./sce_sys/param.sfo
+sudo rm -rf *.vpk
+sudo rm -rf ./sce_sys/param.sfo
 clear
 
 if [ -f dir.vp ]; then
@@ -29,8 +29,8 @@ else
 fi
 
 echo Generating param.sfo file...
-vita-mksfoex -s TITLE_ID=${CURRENTID} "$CURRENTDIR" param.sfo
-mv param.sfo ./sce_sys/
+sudo vita-mksfoex -s TITLE_ID=${CURRENTID} "$CURRENTDIR" param.sfo
+sudo mv param.sfo ./sce_sys/
 
 echo Packaging...
 zip -r "$CURRENTDIR.vpk" * -x '*.vpk' -x '*.sh' -x '*.vp'
