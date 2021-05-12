@@ -1,0 +1,71 @@
+sudo echo "Starting..."
+
+export VITASDK=/usr/local/vitasdk
+export PATH=$VITASDK/bin:$PATH # add vitasdk tool to $PATH
+CURRENTDIR=${PWD##*/}
+CURRENTFULLDIR=$PWD
+
+if [ -f id.vp ]; then
+    CURRENTID=`cat id.vp`
+else
+    clear
+    echo "4 letter application ID:"
+    read CURRENTID
+    echo $CURRENTID >> id.vp
+fi
+
+echo Deleting old files...
+rm -rf *.vpk
+rm -rf ./sce_sys/param.sfo
+clear
+
+if [ -f dir.vp ]; then
+    CURRENTDIR=`cat dir.vp`
+else
+    echo "Application name:"
+    read CURRENTDIR
+    echo $CURRENTDIR >> dir.vp
+    clear
+fi
+
+echo Generating param.sfo file...
+vita-mksfoex -s TITLE_ID=${CURRENTID}00001 "$CURRENTDIR" param.sfo
+mv param.sfo ./sce_sys/
+
+echo Packaging...
+zip -r $CURRENTDIR.vpk * -x '*.vpk' -x '*.sh' -x '*.vp'
+
+PSVITAMOUNTPOINT="null"
+
+for i in /dev/s*; do
+    sudo umount /home/PSVMountPoint > /dev/null 2>&1
+    if sudo mount "$i" /home/PSVMountPoint > /dev/null 2>&1
+    then
+        echo "Successfully mounted, checking files..."
+        if cd /home/PSVMountPoint/app/VITASHELL > /dev/null 2>&1
+        then
+            PSVITAMOUNTPOINT=$i
+            echo "PSVita detected on $i"
+        fi
+    fi
+
+done
+
+echo Looking for mounted PSVITA...
+
+cd /home/PSVMountPoint || sudo mkdir /home/PSVMountPoint
+if mountpoint -q /home/PSVMountPoint/
+then
+    echo "Existing PSVita mount found."
+    sudo umount /home/PSVMountPoint
+else
+    echo "Mounting PSVita..."
+    sudo mount $PSVITAMOUNTPOINT /home/PSVMountPoint || { echo "Failed to mount."; exit; }
+fi
+
+sudo rm -rf "/home/PSVMountPoint/$CURRENTDIR.vpk" || echo "File not found, no need to delete."
+sudo cp "$CURRENTFULLDIR/$CURRENTDIR.vpk" /home/PSVMountPoint/
+echo "Files copied successfully."
+sleep 3
+sudo umount /home/PSVMountPoint
+echo "Successfully unmounted, task done."
