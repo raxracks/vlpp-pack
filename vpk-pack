@@ -9,7 +9,7 @@ if [ -f id.vp ]; then
     CURRENTID=`cat id.vp`
 else
     clear
-    echo "4 letter application ID:"
+    echo "9 letter application ID:"
     read CURRENTID
     echo $CURRENTID >> id.vp
 fi
@@ -29,11 +29,11 @@ else
 fi
 
 echo Generating param.sfo file...
-vita-mksfoex -s TITLE_ID=${CURRENTID}00001 "$CURRENTDIR" param.sfo
+vita-mksfoex -s TITLE_ID=${CURRENTID} "$CURRENTDIR" param.sfo
 mv param.sfo ./sce_sys/
 
 echo Packaging...
-zip -r $CURRENTDIR.vpk * -x '*.vpk' -x '*.sh' -x '*.vp'
+zip -r "$CURRENTDIR.vpk" * -x '*.vpk' -x '*.sh' -x '*.vp'
 
 PSVITAMOUNTPOINT="null"
 
@@ -41,7 +41,7 @@ for i in /dev/s*; do
     sudo umount /home/PSVMountPoint > /dev/null 2>&1
     if sudo mount "$i" /home/PSVMountPoint > /dev/null 2>&1
     then
-        echo "Successfully mounted, checking files..."
+        echo "Successfully mounted $i, checking files..."
         if cd /home/PSVMountPoint/app/VITASHELL > /dev/null 2>&1
         then
             PSVITAMOUNTPOINT=$i
