@@ -25,3 +25,5 @@ Open a terminal into the folder where the package files are contained (eboot.bin
 vpk-pack
 ```
 If it works properly, the VPK will be created, the PSVita will be detected, and mounted, the files will be copied, and then the PSVita will be unmounted.
+
+The first time you run the command it will ask you to choose a 9 letter ID and an application name, the ID must be 9 letters or you will have an error when installing the package in VitaShell.
