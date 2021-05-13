@@ -1,4 +1,4 @@
-# VPK Pack
+# VLPP Pack
 Create and automatically copy VPK's to a PSVita on linux
 
 
